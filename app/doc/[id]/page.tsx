@@ -6,7 +6,7 @@ function DocumentPage({
     params: { id },
 } : {
     params: {
-        id: String;
+        id: string;
     };
 }) {
   return (
