@@ -8,7 +8,7 @@ import {
 function LiveBlocksProvider({children}: {
     children: React.ReactNode
 }) {
-  if (!process.env.NEXT_PUBLIC_LIVEBLOCKS_KEY) {
+  if (!process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY) {
     throw new Error("Missing NEXT_PUBLIC_LIVEBLOCKS_KEY");
   }
   return (

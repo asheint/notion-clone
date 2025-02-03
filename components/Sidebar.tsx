@@ -19,15 +19,13 @@ import SidebarOption from "./SidebarOption"
 
 interface RoomDocument extends DocumentData {
     createdAt: string;
-    role: "owner";
+    role: "owner" | "editor";
     roomId: string;
     userId: string;
 }
 
 function Sidebar() {
-
     const { user } = useUser();
-
 
     const [groupedData, setGroupedData] = useState<{
         owner: RoomDocument[];
@@ -46,8 +44,7 @@ function Sidebar() {
     );
 
     useEffect(() => {
-
-        if (!data) return; // Ensure data is available
+        if (!data) return;
 
         const grouped = data.docs.reduce<{
             owner: RoomDocument[];
@@ -69,11 +66,9 @@ function Sidebar() {
                 }
 
                 return acc;
-            }, {
-            owner: [],
-            editor: [],
-        }
-        )
+            },
+            { owner: [], editor: [] }
+        );
 
         setGroupedData(grouped);
     }, [data]);
@@ -83,7 +78,7 @@ function Sidebar() {
             <NewDocumentButton />
 
             <div className="flex py-4 flex-col space-y-4 md:max-w-36">
-                {/* My Document */}
+                {/* My Documents */}
                 {groupedData.owner.length === 0 ? (
                     <h2 className="text-gray-500 font-semibold text-sm">
                         No Document Found
@@ -99,17 +94,17 @@ function Sidebar() {
                     </>
                 )}
             </div>
-            
-            {/* Shared with me */}
+
+            {/* Shared with Me */}
             {groupedData.editor.length > 0 && (
-                <>
+                <div className="flex py-4 flex-col space-y-4 md:max-w-36">
                     <h2 className="text-gray-500 font-semibold text-sm">
-                        Shared with me
+                        Shared with Me
                     </h2>
                     {groupedData.editor.map((doc) => (
                         <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
                     ))}
-                </>
+                </div>
             )}
         </>
     );
@@ -136,6 +131,7 @@ function Sidebar() {
                 {menuOptions}
             </div>
         </div>
-    )
+    );
 }
-export default Sidebar
+
+export default Sidebar;
