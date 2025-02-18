@@ -25,7 +25,7 @@ interface RoomDocument extends DocumentData {
 }
 
 function Sidebar() {
-    const { user } = useUser();
+    const { user, isLoaded } = useUser();
 
     const [groupedData, setGroupedData] = useState<{
         owner: RoomDocument[];
@@ -36,15 +36,20 @@ function Sidebar() {
     });
 
     const [data, loading, error] = useCollection(
-        user &&
+        // Only create query when user is fully loaded
+        isLoaded && user ?
         query(
             collectionGroup(db, "rooms"),
-            where("userId", "==", user.emailAddresses[0].toString())
-        )
+            where("userId", "==", user.id)
+        ) : null
     );
 
     useEffect(() => {
-        if (!data) return;
+
+        if (!data) {
+            console.log("No data");
+            return;
+        }
 
         const grouped = data.docs.reduce<{
             owner: RoomDocument[];
